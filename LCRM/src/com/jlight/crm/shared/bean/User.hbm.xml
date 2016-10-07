@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jlight.crm.shared.bean.User" table="user" catalog="lcrm">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="nickName" type="string">
+            <column name="nickname" length="45" not-null="true" />
+        </property>
+        <property name="department" type="string">
+            <column name="department" length="45"/>
+        </property>
+        <property name="title" type="string">
+            <column name="title" length="45" />
+        </property>
+        <property name="userName" type="string">
+            <column name="userName" length="45" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="45" not-null="true"  />
+        </property>
+        <property name="isEnable" type="java.lang.Boolean">
+            <column name="isenable"/>
+        </property>
+<!--         <set name="openclasseses" inverse="true" lazy="false">
+            <key>
+                <column name="teacherid" />
+            </key>
+            <one-to-many class="com.sickle.pojo.edu.Cls"/>
+        </set> -->
+    </class>
+</hibernate-mapping>

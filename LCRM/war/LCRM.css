@@ -1,0 +1,26 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+
+.loginformPanel{
+	padding-top: 20px;
+}
+
+.logintitle{
+	font-size:18px;
+	color:#111111;
+}
+
+.logintitleFocused{
+  font-size:18px;
+  color:#0033FF;
+}
+
+.cellPadding{
+	padding-bottom: 30px;
+}
+
+.buttonItemHover{
+	color:#0033FF;
+}
