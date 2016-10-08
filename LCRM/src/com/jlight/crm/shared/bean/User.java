@@ -45,7 +45,7 @@ public class User implements Serializable {
   @UILabel(index=4,type = UIType.Password,title="密码",reqiured = true)
   private String password;
 
-  @UILabel(index=5,type = UIType.RadioButton,title="注销")
+  @UILabel(index=5,type = UIType.RadioButton,title="是否有效")
   private Boolean isEnable;
 
   public User() {

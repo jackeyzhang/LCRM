@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.jlight.crm.shared.bean.Product" table="product"
+		catalog="lcrm">
+		<id name="id" type="java.lang.Integer">
+			<column name="id" />
+			<generator class="identity" />
+		</id>
+		<property name="name" type="string">
+			<column name="name" length="45" not-null="true" />
+		</property>
+		<property name="code" type="string">
+			<column name="code" length="45" not-null="true" />
+		</property>
+		<property name="barCode" type="string">
+			<column name="barCode" length="45" />
+		</property>
+		<property name="cid" type="java.lang.Integer">
+			<column name="cid" not-null="true" />
+		</property>
+		<property name="unit" type="string">
+			<column name="unit" length="45" />
+		</property>
+		<property name="period" type="string">
+			<column name="period" length="45" />
+		</property>
+		<property name="department" type="string">
+			<column name="department" length="45" />
+		</property>
+		<property name="point" type="string">
+			<column name="point" length="45" />
+		</property>
+		<property name="remark" type="string">
+			<column name="remark" length="450" />
+		</property>
+		<property name="create" type="java.util.Date">
+			<column name="createdate" sql-type="datetime"/>
+		</property>
+		<property name="edit" type="java.util.Date">
+			<column name="editdate" sql-type="datetime"/>
+		</property>
+		<property name="createUser" type="java.lang.Integer">
+			<column name="createuser" />
+		</property>
+		<property name="editUser" type="java.lang.Integer">
+			<column name="edituser"/>
+		</property>
+	</class>
+</hibernate-mapping>

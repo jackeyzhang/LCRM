@@ -7,16 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.jlight.crm.client.itf.GreetingService;
-import com.jlight.crm.client.itf.GreetingServiceAsync;
-import com.jlight.crm.shared.bean.User;
+import com.jlight.crm.client.itf.ProductService;
+import com.jlight.crm.client.itf.ProductServiceAsync;
+import com.jlight.crm.shared.bean.Product;
 import com.jlight.crm.ui.AsyncCallbackWithStatus;
 import com.jlight.crm.ui.DefaultListDForm;
 import com.jlight.crm.ui.datasource.GwtRpcDataSource;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tab.Tab;
 
@@ -36,15 +35,14 @@ public class ProductPage extends Tab {
   public ProductPage( String title, String icon ) {
     this.setTitle( title );
     this.setIcon( icon );
-    this.setPane( new Label( "Product") );
-//    this.setPane( new ProductList().getDefaultLayout() );
+    this.setPane( new ProductList().getDefaultLayout() );
   }
 
   class ProductList extends DefaultListDForm {
 
     @Override
     public DataSource getDataSource() {
-      return new ProductDataSource().getDataSource( User.class );
+      return new ProductDataSource().getDataSource( Product.class );
     }
 
     @Override
@@ -60,17 +58,17 @@ public class ProductPage extends Tab {
 
   class ProductDataSource extends GwtRpcDataSource {
 
-    private GreetingServiceAsync service = GreetingService.Util.getInstance();
+    private ProductServiceAsync service = ProductService.Util.getInstance();
 
     @Override
     protected void executeFetch( final String requestId, final DSRequest request, final DSResponse response ) {
       final int startIndex = ( request.getStartRow() < 0 ) ? 0 : request.getStartRow();
       final int endIndex = ( request.getEndRow() == null ) ? -1 : request.getEndRow();
       final String name = request.getCriteria().getAttributeAsString( QUERY_NAME );
-      service.listUser( startIndex, endIndex, new AsyncCallbackWithStatus<List<User>>() {
+      service.listProduct( startIndex, endIndex, new AsyncCallbackWithStatus<List<Product>>() {
 
         @Override
-        public void call( List<User> result ) {
+        public void call( List<Product> result ) {
           int size = result.size();
           if ( endIndex >= 0 ) {
             if ( endIndex < startIndex ) {
@@ -87,7 +85,7 @@ public class ProductPage extends Tab {
               if ( i >= startIndex && i <= endIndex ) {
                 ListGridRecord record = new ListGridRecord();
                 if ( null != name && !name.isEmpty() ) {
-                  if ( result.get( i ).getUserName().equalsIgnoreCase( name ) ) {
+                  if ( result.get( i ).getName().equalsIgnoreCase( name ) ) {
                     getValues( result.get( i ), record );
                     list.add( record );
                   }
@@ -102,7 +100,7 @@ public class ProductPage extends Tab {
           }
           response.setData( list.toArray( new ListGridRecord[list.size()] ) );
           response.setTotalRows( result.size() );
-          getDataSource( User.class ).processResponse( requestId, response );
+          getDataSource( Product.class ).processResponse( requestId, response );
         }
       } );
 
@@ -112,16 +110,15 @@ public class ProductPage extends Tab {
     protected void executeAdd( final String requestId, final DSRequest request, final DSResponse response ) {
       JavaScriptObject data = request.getData();
       final ListGridRecord rec = new ListGridRecord( data );
-      User user = new User();
-      setValues( rec, user );
-      service.addUser( user, new AsyncCallbackWithStatus<Void>() {
-
+      Product Product = new Product();
+      setValues( rec, Product );
+      service.addProduct( Product, new AsyncCallbackWithStatus<Void>() {
         @Override
         public void call( Void result ) {
           ListGridRecord[] list = new ListGridRecord[1];
           list[0] = rec;
           response.setData( list );
-          getDataSource( User.class ).processResponse( requestId, response );
+          getDataSource( Product.class ).processResponse( requestId, response );
         }
       } );
     }
@@ -130,16 +127,16 @@ public class ProductPage extends Tab {
     protected void executeUpdate( final String requestId, final DSRequest request, final DSResponse response ) {
       JavaScriptObject data = request.getData();
       final ListGridRecord rec = new ListGridRecord( data );
-      User user = new User();
-      setValues( rec, user );
-      service.updateUser( user, new AsyncCallbackWithStatus<User>() {
+      Product Product = new Product();
+      setValues( rec, Product );
+      service.updateProduct( Product, new AsyncCallbackWithStatus<Product>() {
 
         @Override
-        public void call( User result ) {
+        public void call( Product result ) {
           ListGridRecord[] list = new ListGridRecord[1];
           list[0] = rec;
           response.setData( list );
-          getDataSource( User.class ).processResponse( requestId, response );
+          getDataSource( Product.class ).processResponse( requestId, response );
         }
       } );
     }
@@ -149,14 +146,14 @@ public class ProductPage extends Tab {
       JavaScriptObject data = request.getData();
       final ListGridRecord rec = new ListGridRecord( data );
       Integer id = rec.getAttributeAsInt( "id" );
-      service.removeUser( id, new AsyncCallbackWithStatus<Boolean>() {
+      service.removeProduct( id, new AsyncCallbackWithStatus<Boolean>() {
 
         @Override
         public void call( Boolean result ) {
           ListGridRecord[] list = new ListGridRecord[1];
           list[0] = rec;
           response.setData( list );
-          getDataSource( User.class ).processResponse( requestId, response );
+          getDataSource( Product.class ).processResponse( requestId, response );
         }
       } );
     }
