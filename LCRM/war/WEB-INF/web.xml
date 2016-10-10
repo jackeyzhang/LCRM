@@ -25,6 +25,16 @@
 		<url-pattern>/lcrm/product</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>customerServlet</servlet-name>
+		<servlet-class>com.jlight.crm.server.service.CustomerServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>customerServlet</servlet-name>
+		<url-pattern>/lcrm/customer</url-pattern>
+	</servlet-mapping>
+
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>LCRM.html</welcome-file>

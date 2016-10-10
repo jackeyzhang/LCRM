@@ -17,5 +17,6 @@
 
 		<mapping resource="com/jlight/crm/shared/bean/User.hbm.xml" />
 		<mapping resource="com/jlight/crm/shared/bean/Product.hbm.xml" />
+		<mapping resource="com/jlight/crm/shared/bean/Customer.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>
