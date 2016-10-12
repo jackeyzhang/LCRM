@@ -6,6 +6,7 @@ package com.jlight.crm.server.dao;
 import org.hibernate.Query;
 
 import com.jlight.crm.server.dao.support.HibernateSupport;
+import com.jlight.crm.shared.bean.Category;
 import com.jlight.crm.shared.bean.Product;
 
 
@@ -24,4 +25,11 @@ public class ProductDao implements HibernateSupport<Product> {
     return (Product)query.list().get( 0 );
   }
 
+  public Category getCategoryRoot(){
+    Query query = getSession().createQuery( "from Category where pid is null " );
+    if ( query.list() == null || query.list().size() == 0 ) {
+      return null;
+    }
+    return (Category)query.list().get( 0 );
+  }
 }

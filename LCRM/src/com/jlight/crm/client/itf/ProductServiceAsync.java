@@ -3,6 +3,7 @@ package com.jlight.crm.client.itf;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.jlight.crm.shared.bean.Category;
 import com.jlight.crm.shared.bean.Product;
 
 
@@ -17,5 +18,8 @@ public interface ProductServiceAsync {
   void queryProduct( String Productname, AsyncCallback<Product> callback );
 
   void listProduct( int startIndex, int length, AsyncCallback<List<Product>> callback );
+
+  void getCategoryList( AsyncCallback<List<Category>> callback );
+
 
 }

@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.jlight.crm.client.itf.ProductService;
 import com.jlight.crm.server.dao.ProductDao;
+import com.jlight.crm.shared.bean.Category;
 import com.jlight.crm.shared.bean.Product;
 
 
@@ -77,5 +78,18 @@ public class ProductServiceImpl extends RemoteServiceServlet implements ProductS
     }
     return li.get( 0 );
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<Category> getCategoryList() {
+    Session session = productDao.getSession();
+    Query query = session.createQuery( "from Category " );
+    List<Category> li = query.list();
+    if ( li == null || li.size() == 0 ) {
+      return null;
+    }
+    return li;
+  }
+
 
 }

@@ -16,7 +16,7 @@ import com.jlight.crm.shared.bean.Customer;
 public class CustomerDao implements HibernateSupport<Customer> {
 
   public Customer getCustomer( String custName ) {
-    Query query = getSession().createQuery( "from Product where custName = ? " );
+    Query query = getSession().createQuery( "from Customer where custName = ? " );
     query.setString( 0, custName );
     if ( query.list() == null || query.list().size() == 0 ) {
       return null;

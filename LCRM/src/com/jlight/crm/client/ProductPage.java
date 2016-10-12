@@ -9,6 +9,7 @@ import java.util.List;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.jlight.crm.client.itf.ProductService;
 import com.jlight.crm.client.itf.ProductServiceAsync;
+import com.jlight.crm.shared.bean.Category;
 import com.jlight.crm.shared.bean.Product;
 import com.jlight.crm.ui.AsyncCallbackWithStatus;
 import com.jlight.crm.ui.DefaultListDForm;
@@ -16,14 +17,15 @@ import com.jlight.crm.ui.datasource.GwtRpcDataSource;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
-import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.SplitPane;
 import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
+import com.smartgwt.client.widgets.tree.TreeNode;
 import com.smartgwt.client.widgets.tree.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.tree.events.DataArrivedHandler;
 
@@ -35,7 +37,7 @@ import com.smartgwt.client.widgets.tree.events.DataArrivedHandler;
 public class ProductPage extends Tab {
 
   private static final String QUERY_NAME = "productName";
-  
+
   public ProductPage( String title ) {
     this( title, "product.png" );
   }
@@ -49,39 +51,52 @@ public class ProductPage extends Tab {
     splitPane.setShowRightButton( true );
     splitPane.setBorder( "1px solid blue" );
     splitPane.setShowDetailToolStrip( false );
-    splitPane.setShowNavigationBar( false );
     splitPane.setNavigationPane( getTree() );
     splitPane.setDetailPane( new ProductList().getDefaultLayout() );
     this.setPane( splitPane );
   }
-  
-  private Canvas getTree(){
-    final TreeGrid treeGrid = new TreeGrid();  
-    treeGrid.setLoadDataOnDemand(false);  
-    treeGrid.setWidth(500);  
-//    treeGrid.setDataSource(employeeDS);  
-    treeGrid.setNodeIcon("icons/16/person.png");  
-    treeGrid.setFolderIcon("icons/16/person.png");  
-    treeGrid.setShowOpenIcons(false);  
-    treeGrid.setShowDropIcons(false);  
-    treeGrid.setClosedIconSuffix("");  
-    treeGrid.setAutoFetchData(true);  
-    
-    TreeGridField field = new TreeGridField();  
-    field.setName("产品分类"); 
-    field.setAlign( Alignment.CENTER );
-    field.setCellFormatter(new CellFormatter() {  
-        public String format(Object value, ListGridRecord record, int rowNum, int colNum) {  
-            return "tree";  
-        }  
-    });  
 
-    treeGrid.setFields(field);  
-    treeGrid.addDataArrivedHandler(new DataArrivedHandler() {  
-        public void onDataArrived(DataArrivedEvent event) {  
-            treeGrid.getData().openAll();  
-        }  
-    });  
+  private Canvas getTree() {
+    final TreeGrid treeGrid = new TreeGrid();
+    treeGrid.setLoadDataOnDemand( false );
+    treeGrid.setWidth( 500 );
+    treeGrid.setNodeIcon( "icons/16/person.png" );
+    treeGrid.setFolderIcon( "icons/16/person.png" );
+    treeGrid.setShowOpenIcons( false );
+    treeGrid.setShowDropIcons( false );
+    treeGrid.setClosedIconSuffix( "" );
+    treeGrid.setShowHeader( false );
+    treeGrid.setAutoFetchData( true );
+
+    TreeGridField field = new TreeGridField( "name", "Tree from local data" );
+    field.setCanSort( false );
+    treeGrid.setFields( field );
+
+    treeGrid.addDataArrivedHandler( new DataArrivedHandler(){
+      @Override
+      public void onDataArrived( DataArrivedEvent event ) {
+        treeGrid.getData().openAll();
+      }
+    } );
+
+    ProductServiceAsync service = ProductService.Util.getInstance();
+
+    service.getCategoryList( new AsyncCallbackWithStatus<List<Category>>() {
+      @Override
+      public void call( List<Category> list ) {
+        CategoryTree tree = new CategoryTree();
+        List<CategoryTreeNode> nodes = new ArrayList<CategoryTreeNode>();
+        for ( Category category : list ) {
+          CategoryTreeNode node = new CategoryTreeNode( category.getId(), category.getPid(), category.getName() );
+          nodes.add( node );
+        }
+        tree.setData( nodes.toArray( new CategoryTreeNode[nodes.size()] ) );
+        treeGrid.setData( tree );
+        treeGrid.getData().openAll();
+        treeGrid.redraw();
+      }
+    } );
+
     return treeGrid;
   }
 
@@ -206,6 +221,40 @@ public class ProductPage extends Tab {
       } );
     }
 
+  }
+
+  class CategoryTree extends Tree {
+
+    public CategoryTree() {
+      super();
+      setModelType( TreeModelType.PARENT );
+      setNameProperty( "name" );
+      setIdField( "id" );
+      setParentIdField( "parent" );
+      setShowRoot( true );
+    }
+
+  }
+
+  public static class CategoryTreeNode extends TreeNode {
+
+    public CategoryTreeNode( Integer id, Integer cid, String name ) {
+      setId( id );
+      setParent( cid );
+      setName( name );
+    }
+
+    public void setId( Integer value ) {
+      setAttribute( "id", value );
+    }
+
+    public void setParent( Integer value ) {
+      setAttribute( "parent", value );
+    }
+
+    public void setName( String name ) {
+      setAttribute( "name", name );
+    }
   }
 
 }
