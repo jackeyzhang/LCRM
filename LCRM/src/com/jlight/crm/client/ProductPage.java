@@ -60,8 +60,8 @@ public class ProductPage extends Tab {
     final TreeGrid treeGrid = new TreeGrid();
     treeGrid.setLoadDataOnDemand( false );
     treeGrid.setWidth( 500 );
-    treeGrid.setNodeIcon( "icons/16/person.png" );
-    treeGrid.setFolderIcon( "icons/16/person.png" );
+    treeGrid.setNodeIcon( "folder_document.png" );
+    treeGrid.setFolderIcon( "document_plain_new.png" );
     treeGrid.setShowOpenIcons( false );
     treeGrid.setShowDropIcons( false );
     treeGrid.setClosedIconSuffix( "" );
