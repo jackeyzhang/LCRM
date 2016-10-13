@@ -1,8 +1,8 @@
 package com.jlight.crm.ui;
 
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Img;
-import com.smartgwt.client.widgets.Label;
 
 
 /**
@@ -11,28 +11,18 @@ import com.smartgwt.client.widgets.Label;
  * @author jacky
  *
  */
-public class Loading extends DefaultDialog {
-
-  private Label hintlabel;
+public class Loading extends PopupPanel {
 
   public Loading( String title ) {
-    super( title );
-    this.setIsModal( true );
-    this.setShowMinimizeButton( false );
-    this.setShowModalMask( true );
-    this.setShowCloseButton( false );
+    setWidget( getView() );
+    setGlassEnabled( true );
+    setModal( true );
   }
 
-  @Override
   public Canvas getView() {
-    Img img = new Img( "loading2.gif" );
-    img.setSize( "100px", "100px" );
+    Img img = new Img( "wait-new.gif" );
+    img.setSize( "30px", "30px" );
     return img;
-  }
-
-  public void setHint( String hint ) {
-    hintlabel.setContents( hint );
-    hintlabel.redraw();
   }
 
 }

@@ -23,13 +23,13 @@ public abstract class AsyncCallbackWithStatus<T> implements AsyncCallback<T> {
 
   public AsyncCallbackWithStatus( String hint ) {
     this.loadinghint = new Loading( hint );
-    loadinghint.show();
+    loadinghint.center();
   }
 
   @Override
   public void onFailure( Throwable caught ) {
     if ( loadinghint != null ) {
-      loadinghint.destroy();
+      loadinghint.hide();
     }
     SC.say( "系统出了个小问题:" + caught.getMessage() );
   }
@@ -38,7 +38,7 @@ public abstract class AsyncCallbackWithStatus<T> implements AsyncCallback<T> {
   public void onSuccess( T result ) {
     call( result );
     if ( loadinghint != null ) {
-      loadinghint.destroy();
+      loadinghint.hide();
     }
   }
 
