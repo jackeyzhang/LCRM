@@ -5,8 +5,8 @@ package com.jlight.crm.ui;
 
 import java.util.List;
 
-import com.jlight.crm.ui.form.FormConst;
 import com.jlight.crm.ui.form.FormItemFactory;
+import com.jlight.crm.ui.form.FormType;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -25,7 +25,7 @@ public abstract class DefaultForm extends DynamicForm {
   }
 
   public DynamicForm getAddForm() {
-    List<FormItem> items = FormItemFactory.getWidgets( getDS(), FormConst.OP_ADD );
+    List<FormItem> items = FormItemFactory.getWidgets( getDS(), FormType.ADDFORM );
     preGetAddForm( items );
     setDataSource( getDS() );
     setItems( items.toArray( new FormItem[items.size()] )  );
@@ -34,7 +34,7 @@ public abstract class DefaultForm extends DynamicForm {
   }
 
   public DynamicForm getModifyForm() {
-    List<FormItem> items = FormItemFactory.getWidgets( getDS(), FormConst.OP_MF );
+    List<FormItem> items = FormItemFactory.getWidgets( getDS(), FormType.EDITFORM );
     preGetModifyForm( items );
     setDataSource( getDS() );
     setItems( items.toArray( new FormItem[items.size()] )  );
@@ -43,7 +43,7 @@ public abstract class DefaultForm extends DynamicForm {
   }
 
   public DynamicForm getLookForm() {
-    List<FormItem> items = FormItemFactory.getWidgets( getDS(), FormConst.OP_LOOK );
+    List<FormItem> items = FormItemFactory.getWidgets( getDS(), FormType.SHOWFORM );
     preGetLookForm( items );
     setDataSource( getDS() );
     setItems( items.toArray( new FormItem[items.size()] )  );

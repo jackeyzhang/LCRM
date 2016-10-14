@@ -16,7 +16,6 @@ import com.gwtent.reflection.client.Field;
 import com.gwtent.reflection.client.TypeOracle;
 import com.jlight.crm.ui.DefaultField;
 import com.jlight.crm.ui.uireflect.UILabel;
-import com.jlight.crm.ui.uireflect.UIMask;
 import com.jlight.crm.ui.uireflect.UIType;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -105,10 +104,6 @@ public abstract class GwtRpcDataSource extends AbstractDataSource {
 
       if ( field.isId() ) {
         newfield.getField().setPrimaryKey( true );
-        newfield.getField().setHidden( true );
-      }
-
-      if ( field.mask() == UIMask.nevershow ) {
         newfield.getField().setHidden( true );
       }
 

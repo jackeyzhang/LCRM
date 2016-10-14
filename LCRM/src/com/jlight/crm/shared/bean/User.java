@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 import com.gwtent.reflection.client.Reflectable;
 import com.jlight.crm.ui.uireflect.UILabel;
+import com.jlight.crm.ui.uireflect.UIMask;
 import com.jlight.crm.ui.uireflect.UIType;
 
 
@@ -39,10 +40,10 @@ public class User implements Serializable {
   @UILabel(index=2,title="职位")
   private String title;
 
-  @UILabel(index=3,title="用户名",reqiured = true)
+  @UILabel(index=3,title="用户名",reqiured = true, mask=UIMask.add_only)
   private String userName;
 
-  @UILabel(index=4,type = UIType.Password,title="密码",reqiured = true)
+  @UILabel(index=4,type = UIType.Password,title="密码",reqiured = true, mask=UIMask.add_only )
   private String password;
 
   @UILabel(index=5,type = UIType.RadioButton,title="是否有效")

@@ -24,18 +24,18 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
  */
 public class FormItemFactory {
 
-  public static List<FormItem> getWidgets( DataSource ds, String op ) {
+  public static List<FormItem> getWidgets( DataSource ds, FormType type ) {
     List<FormItem> items = new ArrayList<FormItem>();
     for ( DataSourceField field : ds.getFields() ) {
       if ( field.getPrimaryKey() ) {
         continue;
       }
-      items.add( getWidget( field, op ) );
+      items.add( getWidget( field, type ) );
     }
     return items;
   }
 
-  public static FormItem getWidget( DataSourceField mfield, String op ) {
+  public static FormItem getWidget( DataSourceField mfield, FormType type ) {
     FormItem item = null;
     if ( mfield.getAttribute( DefaultField.STYPE ).equals( UIType.Integer.toString() ) ) {
       item = new DefaultIntegerItem();
@@ -64,27 +64,13 @@ public class FormItemFactory {
     }
 
     int mask = mfield.getAttributeAsInt( DefaultField.MASK );
-    if ( op.equals( FormConst.OP_LOOK ) ) {
+    
+    if( !UIMask.isEnable( mask, type ) ) {
       item.disable();
     }
-    else if ( op.equals( FormConst.OP_ADD ) ) {
-      if ( ( mask & UIMask.showInAdd.getValue() ) == 0 ) {
-        item.hide();
-      }
-      if ( ( mask & UIMask.enInAdd.getValue() ) == 0 ) {
-        item.disable();
-      }
-    }
-    else if ( op.equals( FormConst.OP_MF ) ) {
-      if ( ( mask & UIMask.showInEdit.getValue() ) == 0 ) {
-        item.hide();
-      }
-      if ( ( mask & UIMask.enInEdit.getValue() ) == 0 ) {
-        item.disable();
-      }
-    }
-    else {
-      item.enable();
+    
+    if( !UIMask.isVisiable( mask, type )){
+      item.hide();
     }
     item.setName( mfield.getName() );
     return item;

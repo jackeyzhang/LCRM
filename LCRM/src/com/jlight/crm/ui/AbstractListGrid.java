@@ -3,6 +3,7 @@
  */
 package com.jlight.crm.ui;
 
+import com.jlight.crm.ui.form.FormType;
 import com.jlight.crm.ui.uireflect.UIMask;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
@@ -35,9 +36,8 @@ public class AbstractListGrid extends ListGrid
 				continue;
 			}
 			int mask = f.getAttributeAsInt( DefaultField.MASK );
-			if( (mask & UIMask.showInList.getValue( )) == 0)
-			{
-				f.setHidden( true );
+			if( !UIMask.isVisiable( mask, FormType.LIST )){
+			  f.setHidden( true );
 			}
 		}
 		this.setDataSource( ds );
