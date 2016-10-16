@@ -64,7 +64,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
   @Override
   public User updateUser( User user ) throws IllegalArgumentException {
-    return userDao.saveorupdate( user );
+    return userDao.update( user );
   }
 
   @Override

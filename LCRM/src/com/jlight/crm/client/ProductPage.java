@@ -14,20 +14,21 @@ import com.jlight.crm.shared.bean.Product;
 import com.jlight.crm.ui.AsyncCallbackWithStatus;
 import com.jlight.crm.ui.DefaultListDForm;
 import com.jlight.crm.ui.datasource.GwtRpcDataSource;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.SplitPane;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
-import com.smartgwt.client.widgets.tree.events.DataArrivedEvent;
-import com.smartgwt.client.widgets.tree.events.DataArrivedHandler;
 
 
 /**
@@ -37,6 +38,8 @@ import com.smartgwt.client.widgets.tree.events.DataArrivedHandler;
 public class ProductPage extends Tab {
 
   private static final String QUERY_NAME = "productName";
+  
+  private  ProductList list = new ProductList();
 
   public ProductPage( String title ) {
     this( title, "product.png" );
@@ -52,7 +55,7 @@ public class ProductPage extends Tab {
     splitPane.setBorder( "1px solid blue" );
     splitPane.setShowDetailToolStrip( false );
     splitPane.setNavigationPane( getTree() );
-    splitPane.setDetailPane( new ProductList().getDefaultLayout() );
+    splitPane.setDetailPane( list.getDefaultLayout() );
     this.setPane( splitPane );
   }
 
@@ -60,28 +63,31 @@ public class ProductPage extends Tab {
     final TreeGrid treeGrid = new TreeGrid();
     treeGrid.setLoadDataOnDemand( false );
     treeGrid.setWidth( 500 );
-    treeGrid.setNodeIcon( "folder_document.png" );
-    treeGrid.setFolderIcon( "document_plain_new.png" );
+    treeGrid.setNodeIcon( "document_plain_new.png" );
+    treeGrid.setFolderIcon( "folder_document.png" );
     treeGrid.setShowOpenIcons( false );
     treeGrid.setShowDropIcons( false );
     treeGrid.setClosedIconSuffix( "" );
     treeGrid.setShowHeader( false );
     treeGrid.setAutoFetchData( true );
+    treeGrid.addSelectionChangedHandler( new SelectionChangedHandler() {
+      @Override
+      public void onSelectionChanged( SelectionEvent event ) {
+        Criteria criteria = new Criteria();
+        criteria.addCriteria( "cid", event.getRecord().getAttributeAsString( "id" ) );
+        list.setCriteria( criteria );
+        list.refreshData();
+      }
+    } );
 
     TreeGridField field = new TreeGridField( "name", "Tree from local data" );
     field.setCanSort( false );
     treeGrid.setFields( field );
 
-    treeGrid.addDataArrivedHandler( new DataArrivedHandler(){
-      @Override
-      public void onDataArrived( DataArrivedEvent event ) {
-        treeGrid.getData().openAll();
-      }
-    } );
-
     ProductServiceAsync service = ProductService.Util.getInstance();
 
     service.getCategoryList( new AsyncCallbackWithStatus<List<Category>>() {
+
       @Override
       public void call( List<Category> list ) {
         CategoryTree tree = new CategoryTree();

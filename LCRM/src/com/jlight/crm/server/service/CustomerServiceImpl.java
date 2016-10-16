@@ -49,7 +49,7 @@ public class CustomerServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public Customer updateCustomer(Customer customer)
 			throws IllegalArgumentException {
-		return customerDao.saveorupdate(customer);
+		return customerDao.update(customer);
 	}
 
 	@Override

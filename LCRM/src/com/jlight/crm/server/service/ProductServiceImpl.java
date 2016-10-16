@@ -48,7 +48,7 @@ public class ProductServiceImpl extends RemoteServiceServlet implements ProductS
 
   @Override
   public Product updateProduct( Product Product ) throws IllegalArgumentException {
-    return productDao.saveorupdate( Product );
+    return productDao.update( Product );
   }
 
   @Override
