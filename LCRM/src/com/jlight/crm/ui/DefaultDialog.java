@@ -21,7 +21,7 @@ public abstract class DefaultDialog extends Window
 	
 	public DefaultDialog( String title )
 	{
-		this( title, false, true, true );
+		this( title, true, true, true );
 	}
 
 	public DefaultDialog( String title, boolean isModal, boolean closeable,
@@ -30,6 +30,7 @@ public abstract class DefaultDialog extends Window
 		this.setAutoSize( true );
 		this.setTitle( title );
 		this.setIsModal( isModal );
+		this.setShowModalMask(true); 
 		this.setShowCloseButton( closeable );
 		this.setShowMinimizeButton( isMinable );
 		this.content = getView( );

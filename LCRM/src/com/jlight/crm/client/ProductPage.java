@@ -4,6 +4,7 @@
 package com.jlight.crm.client;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -20,15 +21,18 @@ import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
 import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.SplitPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -47,6 +51,8 @@ public class ProductPage extends Tab {
   private static final String QUERY_NAME = "productName";
 
   private ProductList list = new ProductList();
+  
+  private List<Category> allCategories = null;
 
   public ProductPage( String title ) {
     this( title, "product.png" );
@@ -100,6 +106,7 @@ public class ProductPage extends Tab {
 
       @Override
       public void call( List<Category> list ) {
+        allCategories = list;
         CategoryTree tree = new CategoryTree();
         List<CategoryTreeNode> nodes = new ArrayList<CategoryTreeNode>();
         for ( Category category : list ) {
@@ -146,6 +153,19 @@ public class ProductPage extends Tab {
             public DataSource getDS() {
               return ProductList.this.getDS();
             }
+
+            @Override
+            public void afterGetAddForm( List<FormItem> items ) {
+              for(FormItem item : items){
+                if(item.getName().equalsIgnoreCase( "cid" )){
+                  LinkedHashMap<Integer, String> valueMap = new LinkedHashMap<Integer, String>();
+                  for(Category ca : allCategories){
+                    valueMap.put( ca.getId(), ca.getName());
+                  }
+                  item.setValueMap( valueMap );
+                }
+              }
+            }
           };
           DefaultDialog dialog = new DefaultDialog( "增加产品" ) {
 
@@ -163,7 +183,21 @@ public class ProductPage extends Tab {
                   hide();
                 }
               } );
-              v.addMember( submit );
+              IButton cancel = new IButton( "取消" );
+              cancel.addClickHandler( new ClickHandler() {
+
+                @Override
+                public void onClick( ClickEvent event ) {
+                  hide();
+                }
+              } );
+              HLayout h = new HLayout();
+              h.setPadding( 15 );
+              h.setWidth( 400 );
+              h.setAlign( Alignment.RIGHT );
+              h.addMember( submit );
+              h.addMember( cancel );
+              v.addMember( h );
               return v;
             }
           };
