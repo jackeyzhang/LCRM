@@ -59,6 +59,9 @@ public class FormItemFactory {
     else if ( mfield.getAttribute( DefaultField.STYPE ).equals( UIType.Mobile.toString() ) ) {
       item = new DefaultTextItem();
     }
+    else if ( mfield.getAttribute( DefaultField.STYPE ).equals( UIType.List.toString() ) ) {
+      item = new DefaultComboBoxItem();
+    }
     else {
       item = new DefaultTextItem();
     }

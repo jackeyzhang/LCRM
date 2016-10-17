@@ -27,8 +27,8 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.SplitPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -77,16 +77,18 @@ public class ProductPage extends Tab {
     treeGrid.setClosedIconSuffix( "" );
     treeGrid.setShowHeader( false );
     treeGrid.setAutoFetchData( true );
-    treeGrid.addSelectionChangedHandler( new SelectionChangedHandler() {
-
+    treeGrid.addSelectionUpdatedHandler( new SelectionUpdatedHandler(){
       @Override
-      public void onSelectionChanged( SelectionEvent event ) {
+      public void onSelectionUpdated( SelectionUpdatedEvent event ) {
+        if ( treeGrid.getSelectedRecord() == null ){
+          list.refreshData();
+          return;
+        }
         Criteria criteria = new Criteria();
-        criteria.addCriteria( "cid", event.getRecord().getAttributeAsString( "id" ) );
-        list.setCriteria( criteria );
-        list.refreshData();
+        criteria.addCriteria( "cid", treeGrid.getSelectedRecord().getAttributeAsString( "id" ) );
+        list.filterData( criteria );
       }
-    } );
+    });
 
     TreeGridField field = new TreeGridField( "name", "Tree from local data" );
     field.setCanSort( false );
