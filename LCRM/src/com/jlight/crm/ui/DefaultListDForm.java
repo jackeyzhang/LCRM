@@ -20,7 +20,6 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.SearchForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
@@ -40,7 +39,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author chenhao
  * 
  */
-public abstract class DefaultListDForm extends ListGrid {
+public abstract class DefaultListDForm extends AbstractListGrid {
 
   private int op = 1;
 
@@ -50,7 +49,8 @@ public abstract class DefaultListDForm extends ListGrid {
     setWidth100();
     setHeight100();
     setAutoFetchData( true );
-    setDataSource( getDataSource() );
+    setDataSource( getDS() );
+    maskAndSetFields( getDS() );
   }
 
   /**
@@ -66,7 +66,7 @@ public abstract class DefaultListDForm extends ListGrid {
    * 获取datasource
    * 
    */
-  public abstract DataSource getDataSource();
+  public abstract DataSource getDS();
 
   /**
    * 获取默认提供的界面

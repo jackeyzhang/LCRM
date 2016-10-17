@@ -40,7 +40,7 @@ public class CustomerPage extends Tab {
 	class CustomerList extends DefaultListDForm {
 
 		@Override
-		public DataSource getDataSource() {
+		public DataSource getDS() {
 			return new CustomerDataSource().getDataSource(Customer.class);
 		}
 

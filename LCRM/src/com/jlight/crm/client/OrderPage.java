@@ -43,7 +43,7 @@ public class OrderPage extends Tab {
   class ProductList extends DefaultListDForm {
 
     @Override
-    public DataSource getDataSource() {
+    public DataSource getDS() {
       return new ProductDataSource().getDataSource( User.class );
     }
 

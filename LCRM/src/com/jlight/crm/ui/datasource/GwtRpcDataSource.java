@@ -23,6 +23,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.DSProtocol;
 import com.smartgwt.client.util.JSOHelper;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 
@@ -176,6 +177,9 @@ public abstract class GwtRpcDataSource extends AbstractDataSource {
       else if ( field.type().equals( UIType.Integer ) ) {
         f.setFieldValue( to, Integer.decode( value == null ? "-1" : value ) );
       }
+      else if ( field.type().equals( UIType.List ) ) {
+        f.setFieldValue( to, Integer.decode( value == null ? "-1" : value ) );
+      }
       else if ( field.type().equals( UIType.Password ) ) {
         f.setFieldValue( to, value == null ? "-1" : value );
       }
@@ -193,7 +197,12 @@ public abstract class GwtRpcDataSource extends AbstractDataSource {
           f.setFieldValue( to, value == null ? false : value.equalsIgnoreCase( "false" ) ? false : true );
         }
         else {
-          f.setFieldValue( to, value == null ? "" : value );
+          try {
+            f.setFieldValue( to, value );
+          }
+          catch ( Exception e ) {
+            SC.say( "Error field:" + f.getType().getSimpleSourceName() );
+          }
         }
       }
 

@@ -12,6 +12,8 @@ import com.jlight.crm.client.itf.ProductServiceAsync;
 import com.jlight.crm.shared.bean.Category;
 import com.jlight.crm.shared.bean.Product;
 import com.jlight.crm.ui.AsyncCallbackWithStatus;
+import com.jlight.crm.ui.DefaultDialog;
+import com.jlight.crm.ui.DefaultForm;
 import com.jlight.crm.ui.DefaultListDForm;
 import com.jlight.crm.ui.datasource.GwtRpcDataSource;
 import com.smartgwt.client.data.Criteria;
@@ -20,10 +22,15 @@ import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.SplitPane;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
@@ -38,8 +45,8 @@ import com.smartgwt.client.widgets.tree.TreeNode;
 public class ProductPage extends Tab {
 
   private static final String QUERY_NAME = "productName";
-  
-  private  ProductList list = new ProductList();
+
+  private ProductList list = new ProductList();
 
   public ProductPage( String title ) {
     this( title, "product.png" );
@@ -71,6 +78,7 @@ public class ProductPage extends Tab {
     treeGrid.setShowHeader( false );
     treeGrid.setAutoFetchData( true );
     treeGrid.addSelectionChangedHandler( new SelectionChangedHandler() {
+
       @Override
       public void onSelectionChanged( SelectionEvent event ) {
         Criteria criteria = new Criteria();
@@ -109,7 +117,7 @@ public class ProductPage extends Tab {
   class ProductList extends DefaultListDForm {
 
     @Override
-    public DataSource getDataSource() {
+    public DataSource getDS() {
       return new ProductDataSource().getDataSource( Product.class );
     }
 
@@ -122,6 +130,59 @@ public class ProductPage extends Tab {
     public String getQueryName() {
       return "name";
     }
+
+    @Override
+    public IButton getAddButton() {
+      IButton add = new IButton( "增加产品" );
+      add.addClickHandler( new ClickHandler() {
+
+        @Override
+        public void onClick( ClickEvent event ) {
+          final DefaultForm form = new DefaultForm() {
+
+            @Override
+            public DataSource getDS() {
+              return ProductList.this.getDS();
+            }
+          };
+          DefaultDialog dialog = new DefaultDialog( "增加产品" ) {
+
+            @Override
+            public Canvas getView() {
+              final DynamicForm newform = form.getAddForm();
+              VLayout v = new VLayout();
+              v.addMember( newform );
+              IButton submit = new IButton( "保存" );
+              submit.addClickHandler( new ClickHandler() {
+
+                @Override
+                public void onClick( ClickEvent event ) {
+                  newform.submit();
+                  hide();
+                }
+              } );
+              v.addMember( submit );
+              return v;
+            }
+          };
+          dialog.show();
+        }
+      } );
+      return add;
+    }
+
+    @Override
+    public IButton getModifyButton() {
+      // TODO Auto-generated method stub
+      return super.getModifyButton();
+    }
+
+    @Override
+    public IButton getRemoveButton() {
+      // TODO Auto-generated method stub
+      return super.getRemoveButton();
+    }
+
   }
 
   class ProductDataSource extends GwtRpcDataSource {

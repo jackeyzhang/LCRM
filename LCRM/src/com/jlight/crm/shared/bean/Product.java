@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.gwtent.reflection.client.Reflectable;
 import com.jlight.crm.ui.uireflect.UILabel;
+import com.jlight.crm.ui.uireflect.UIMask;
 import com.jlight.crm.ui.uireflect.UIType;
 
 
@@ -35,43 +36,43 @@ public class Product implements Serializable {
   @UILabel(type = UIType.Integer, title = "产品编号", isId = true)
   private Integer id;
 
-  @UILabel(title = "产品名称", reqiured = true)
+  @UILabel(index = 0, title = "产品名称", reqiured = true)
   private String name;
 
-  @UILabel(title = "产品编码", reqiured = true)
+  @UILabel(index = 1, title = "产品编码", reqiured = true)
   private String code;
 
-  @UILabel(title = "产品识别码")
+  @UILabel(index = 2, title = "产品识别码")
   private String barCode;
 
-  @UILabel(title = "产品编码", reqiured = true)
+  @UILabel(index = 3, title = "类别", reqiured = true, type = UIType.List )
   private Integer cid;
 
-  @UILabel(title = "数量单位")
+  @UILabel(index = 4, title = "数量单位")
   private String unit;
 
-  @UILabel(title = "交货期")
+  @UILabel(index = 5, title = "交货期")
   private String period;
 
-  @UILabel(title = "工作部门")
+  @UILabel(index = 6, title = "工作部门")
   private String department;
 
-  @UILabel(title = "产品特点")
+  @UILabel(index = 7, title = "产品特点")
   private String point;
 
-  @UILabel(title = "备注", type = UIType.TextArea)
+  @UILabel(index = 8, title = "备注", type = UIType.TextArea)
   private String remark;
 
-  @UILabel(title = "创建时间", type = UIType.DateTime)
+  @UILabel(index = 9, title = "创建时间", type = UIType.DateTime, mask=UIMask.never)
   private Date create;
 
-  @UILabel(title = "更新时间", type = UIType.DateTime)
+  @UILabel(index = 10, title = "更新时间", type = UIType.DateTime, mask=UIMask.never)
   private Date edit;
 
-  @UILabel(title = "创建人")
+  @UILabel(index = 11, title = "创建人", mask=UIMask.never)
   private Integer createUser;
 
-  @UILabel(title = "更新人")
+  @UILabel(index = 12, title = "更新人", mask=UIMask.never)
   private Integer editUser;
 
   public Product() {

@@ -41,7 +41,7 @@ public class UserPage extends Tab {
   class UserList extends DefaultListDForm {
 
     @Override
-    public DataSource getDataSource() {
+    public DataSource getDS() {
       return new UserDataSource().getDataSource( User.class );
     }
 
