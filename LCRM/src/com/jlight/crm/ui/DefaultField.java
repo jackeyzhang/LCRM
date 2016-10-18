@@ -56,6 +56,10 @@ public class DefaultField implements Comparable<DefaultField>
         {
             field = new DataSourceField( name, com.smartgwt.client.types.FieldType.PASSWORD, title );
         }
+		else if( simpleType.equals( UIType.List.toString( )  ))
+        {
+            field = new DataSourceField( name, com.smartgwt.client.types.FieldType.ENUM, title );
+        }
 		else
 		{
 			field = new DataSourceField( name, com.smartgwt.client.types.FieldType.TEXT, title );

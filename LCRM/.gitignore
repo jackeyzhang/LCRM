@@ -4,3 +4,5 @@
 /test-classes/
 /target/
 /war/WEB-INF/lib/gwt-servlet.jar
+/war/lcrm/
+/war/WEB-INF/deploy

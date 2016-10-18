@@ -21,8 +21,10 @@ import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TreeModelType;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -50,9 +52,12 @@ public class ProductPage extends Tab {
 
   private static final String QUERY_NAME = "productName";
 
-  private ProductList list = new ProductList();
+  private ProductList list = null;
   
-  private List<Category> allCategories = null;
+  private SplitPane splitPane = new SplitPane();
+  
+  private static List<Category> allCategories = null;
+  
 
   public ProductPage( String title ) {
     this( title, "product.png" );
@@ -61,14 +66,12 @@ public class ProductPage extends Tab {
   public ProductPage( String title, String icon ) {
     this.setTitle( title );
     this.setIcon( icon );
-    SplitPane splitPane = new SplitPane();
     splitPane.setNavigationTitle( "产品分类" );
     splitPane.setShowLeftButton( true );
     splitPane.setShowRightButton( true );
     splitPane.setBorder( "1px solid blue" );
     splitPane.setShowDetailToolStrip( false );
     splitPane.setNavigationPane( getTree() );
-    splitPane.setDetailPane( list.getDefaultLayout() );
     this.setPane( splitPane );
   }
 
@@ -105,11 +108,11 @@ public class ProductPage extends Tab {
     service.getCategoryList( new AsyncCallbackWithStatus<List<Category>>() {
 
       @Override
-      public void call( List<Category> list ) {
-        allCategories = list;
+      public void call( List<Category> cateList ) {
+        allCategories = cateList;
         CategoryTree tree = new CategoryTree();
         List<CategoryTreeNode> nodes = new ArrayList<CategoryTreeNode>();
-        for ( Category category : list ) {
+        for ( Category category : allCategories ) {
           CategoryTreeNode node = new CategoryTreeNode( category.getId(), category.getPid(), category.getName() );
           nodes.add( node );
         }
@@ -117,6 +120,8 @@ public class ProductPage extends Tab {
         treeGrid.setData( tree );
         treeGrid.getData().openAll();
         treeGrid.redraw();
+        list = new ProductList();
+        splitPane.setDetailPane( list.getDefaultLayout() );
       }
     } );
 
@@ -127,7 +132,16 @@ public class ProductPage extends Tab {
 
     @Override
     public DataSource getDS() {
-      return new ProductDataSource().getDataSource( Product.class );
+      DataSource ds = new ProductDataSource().getDataSource( Product.class );
+      DataSourceField  dsf = ds.getField( "cid" );
+      if(dsf != null){
+        LinkedHashMap<Integer, String> valueMap = new LinkedHashMap<Integer, String>();
+        for(Category ca : allCategories){
+          valueMap.put( ca.getId(), ca.getName());
+        }
+        dsf.setValueMap( valueMap );
+      }
+      return ds;
     }
 
     @Override
@@ -166,6 +180,7 @@ public class ProductPage extends Tab {
                 }
               }
             }
+            
           };
           DefaultDialog dialog = new DefaultDialog( "增加产品" ) {
 
@@ -206,16 +221,84 @@ public class ProductPage extends Tab {
       } );
       return add;
     }
-
+    
     @Override
     public IButton getModifyButton() {
-      // TODO Auto-generated method stub
-      return super.getModifyButton();
+      IButton add = new IButton( "修改产品" );
+      add.addClickHandler( new ClickHandler() {
+
+        @Override
+        public void onClick( ClickEvent event ) {
+          
+          if( list.getSelectedRecord() == null){
+            SC.say( "请选择一条修改的产品" );
+            return;
+          }
+          
+          final DefaultForm form = new DefaultForm() {
+
+            @Override
+            public DataSource getDS() {
+              return ProductList.this.getDS();
+            }
+
+            @Override
+            public void afterGetModifyForm( List<FormItem> items ) {
+              for(FormItem item : items){
+                if(item.getName().equalsIgnoreCase( "cid" )){
+                  LinkedHashMap<Integer, String> valueMap = new LinkedHashMap<Integer, String>();
+                  for(Category ca : allCategories){
+                    valueMap.put( ca.getId(), ca.getName());
+                  }
+                  item.setValueMap( valueMap );
+                }
+              }
+            }
+            
+          };
+          DefaultDialog dialog = new DefaultDialog( "修改产品" ) {
+            @Override
+            public Canvas getView() {
+              final DynamicForm newform = form.getModifyForm();
+              VLayout v = new VLayout();
+              v.addMember( newform );
+              newform.editSelectedData( list );
+              IButton submit = new IButton( "保存" );
+              submit.addClickHandler( new ClickHandler() {
+
+                @Override
+                public void onClick( ClickEvent event ) {
+                  newform.submit();
+                  hide();
+                }
+              } );
+              IButton cancel = new IButton( "取消" );
+              cancel.addClickHandler( new ClickHandler() {
+
+                @Override
+                public void onClick( ClickEvent event ) {
+                  hide();
+                }
+              } );
+              HLayout h = new HLayout();
+              h.setPadding( 15 );
+              h.setWidth( 400 );
+              h.setAlign( Alignment.RIGHT );
+              h.addMember( submit );
+              h.addMember( cancel );
+              v.addMember( h );
+              return v;
+            }
+          };
+          dialog.show();
+        }
+      } );
+      return add;
     }
+
 
     @Override
     public IButton getRemoveButton() {
-      // TODO Auto-generated method stub
       return super.getRemoveButton();
     }
 
