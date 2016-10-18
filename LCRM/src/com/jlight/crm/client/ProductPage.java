@@ -32,11 +32,16 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
 import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.SplitPane;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.MenuItemSeparator;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
@@ -66,6 +71,7 @@ public class ProductPage extends Tab {
     this.setTitle( title );
     this.setIcon( icon );
     splitPane.setNavigationTitle( "产品分类" );
+    splitPane.setShowDetailToolStrip( false );
     splitPane.setShowLeftButton( true );
     splitPane.setShowRightButton( true );
     splitPane.setBorder( "1px solid blue" );
@@ -76,7 +82,8 @@ public class ProductPage extends Tab {
   private Canvas getTree() {
     final TreeGrid treeGrid = new TreeGrid();
     treeGrid.setLoadDataOnDemand( false );
-    treeGrid.setWidth( 500 );
+    treeGrid.setWidth("*");
+    treeGrid.setHeight( "*" );
     treeGrid.setNodeIcon( "document_plain_new.png" );
     treeGrid.setFolderIcon( "folder_document.png" );
     treeGrid.setShowOpenIcons( false );
@@ -97,6 +104,15 @@ public class ProductPage extends Tab {
         list.filterData( criteria );
       }
     } );
+    
+    treeGrid.addCellContextClickHandler( new CellContextClickHandler(){
+      @Override
+      public void onCellContextClick( CellContextClickEvent event ) {
+        System.out.println(event.getRecord().getAttributeAsString( "id" ));
+      }
+    });
+    
+    treeGrid.setContextMenu( getCategoryMenu() );
 
     TreeGridField field = new TreeGridField( "name", "Tree from local data" );
     field.setCanSort( false );
@@ -125,6 +141,15 @@ public class ProductPage extends Tab {
     } );
 
     return treeGrid;
+  }
+  
+  private Menu getCategoryMenu(){
+    Menu menu = new Menu();
+    menu.addItem( new MenuItem("增加分类") );
+    menu.addItem( new MenuItemSeparator()  );
+    menu.addItem( new MenuItem("修改") );
+    menu.addItem( new MenuItem("删除") );
+    return menu;
   }
 
   class ProductList extends DefaultListDForm {
