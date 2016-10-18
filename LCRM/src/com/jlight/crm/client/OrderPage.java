@@ -27,7 +27,7 @@ import com.smartgwt.client.widgets.tab.Tab;
  */
 public class OrderPage extends Tab {
 
-  private static final String QUERY_NAME = "productName";
+  private static final String QUERY_NAME = "id";
   
   public OrderPage( String title ) {
     this(title, "coins.png");

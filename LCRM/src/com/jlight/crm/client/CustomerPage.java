@@ -25,7 +25,7 @@ import com.smartgwt.client.widgets.tab.Tab;
  */
 public class CustomerPage extends Tab {
 
-	private static final String QUERY_NAME = "customerName";
+	private static final String QUERY_NAME = "name";
 
 	public CustomerPage(String title) {
 		this(title, "house.png");

@@ -26,7 +26,7 @@ import com.smartgwt.client.widgets.tab.Tab;
  */
 public class UserPage extends Tab {
 
-  private static final String QUERY_NAME = "userName";
+  private static final String QUERY_NAME = "nickName";
 
   public UserPage( String title ) {
     this(title, "teachers512.png");
@@ -52,7 +52,7 @@ public class UserPage extends Tab {
 
     @Override
     public String getQueryName() {
-      return "name";
+      return "nickName";
     }
   }
 
@@ -80,7 +80,6 @@ public class UserPage extends Tab {
           }
           final List<ListGridRecord> list = new ArrayList<ListGridRecord>();
           if ( size > 0 ) {
-
             for ( int i = 0; i < result.size(); i++ ) {
               if ( i >= startIndex && i <= endIndex ) {
                 ListGridRecord record = new ListGridRecord();

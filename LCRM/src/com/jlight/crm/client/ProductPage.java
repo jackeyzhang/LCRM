@@ -50,14 +50,13 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  */
 public class ProductPage extends Tab {
 
-  private static final String QUERY_NAME = "productName";
+  private static final String QUERY_NAME = "name";
 
   private ProductList list = null;
-  
+
   private SplitPane splitPane = new SplitPane();
-  
+
   private static List<Category> allCategories = null;
-  
 
   public ProductPage( String title ) {
     this( title, "product.png" );
@@ -70,7 +69,6 @@ public class ProductPage extends Tab {
     splitPane.setShowLeftButton( true );
     splitPane.setShowRightButton( true );
     splitPane.setBorder( "1px solid blue" );
-    splitPane.setShowDetailToolStrip( false );
     splitPane.setNavigationPane( getTree() );
     this.setPane( splitPane );
   }
@@ -86,10 +84,11 @@ public class ProductPage extends Tab {
     treeGrid.setClosedIconSuffix( "" );
     treeGrid.setShowHeader( false );
     treeGrid.setAutoFetchData( true );
-    treeGrid.addSelectionUpdatedHandler( new SelectionUpdatedHandler(){
+    treeGrid.addSelectionUpdatedHandler( new SelectionUpdatedHandler() {
+
       @Override
       public void onSelectionUpdated( SelectionUpdatedEvent event ) {
-        if ( treeGrid.getSelectedRecord() == null ){
+        if ( treeGrid.getSelectedRecord() == null ) {
           list.refreshData();
           return;
         }
@@ -97,7 +96,7 @@ public class ProductPage extends Tab {
         criteria.addCriteria( "cid", treeGrid.getSelectedRecord().getAttributeAsString( "id" ) );
         list.filterData( criteria );
       }
-    });
+    } );
 
     TreeGridField field = new TreeGridField( "name", "Tree from local data" );
     field.setCanSort( false );
@@ -130,16 +129,49 @@ public class ProductPage extends Tab {
 
   class ProductList extends DefaultListDForm {
 
+    private DefaultForm form = new DefaultForm() {
+
+      @Override
+      public DataSource getDS() {
+        return ProductList.this.getDS();
+      }
+
+      @Override
+      public void afterGetAddForm( List<FormItem> items ) {
+        for ( FormItem item : items ) {
+          initCidField( item );
+        }
+      }
+
+      @Override
+      public void afterGetModifyForm( List<FormItem> items ) {
+        for ( FormItem item : items ) {
+          initCidField( item );
+        }
+      }
+
+      private void initCidField( FormItem item ) {
+        if ( item.getName().equalsIgnoreCase( "cid" ) ) {
+          LinkedHashMap<Integer, String> valueMap = new LinkedHashMap<Integer, String>();
+          for ( Category ca : allCategories ) {
+            valueMap.put( ca.getId(), ca.getName() );
+          }
+          item.setValueMap( valueMap );
+        }
+      }
+
+    };
+
     @Override
     public DataSource getDS() {
       DataSource ds = new ProductDataSource().getDataSource( Product.class );
-      DataSourceField  dsf = ds.getField( "cid" );
-      if(dsf != null){
+      DataSourceField cid = ds.getField( "cid" );
+      if ( cid != null ) {
         LinkedHashMap<Integer, String> valueMap = new LinkedHashMap<Integer, String>();
-        for(Category ca : allCategories){
-          valueMap.put( ca.getId(), ca.getName());
+        for ( Category ca : allCategories ) {
+          valueMap.put( ca.getId(), ca.getName() );
         }
-        dsf.setValueMap( valueMap );
+        cid.setValueMap( valueMap );
       }
       return ds;
     }
@@ -161,27 +193,6 @@ public class ProductPage extends Tab {
 
         @Override
         public void onClick( ClickEvent event ) {
-          final DefaultForm form = new DefaultForm() {
-
-            @Override
-            public DataSource getDS() {
-              return ProductList.this.getDS();
-            }
-
-            @Override
-            public void afterGetAddForm( List<FormItem> items ) {
-              for(FormItem item : items){
-                if(item.getName().equalsIgnoreCase( "cid" )){
-                  LinkedHashMap<Integer, String> valueMap = new LinkedHashMap<Integer, String>();
-                  for(Category ca : allCategories){
-                    valueMap.put( ca.getId(), ca.getName());
-                  }
-                  item.setValueMap( valueMap );
-                }
-              }
-            }
-            
-          };
           DefaultDialog dialog = new DefaultDialog( "增加产品" ) {
 
             @Override
@@ -194,8 +205,10 @@ public class ProductPage extends Tab {
 
                 @Override
                 public void onClick( ClickEvent event ) {
-                  newform.submit();
-                  hide();
+                  if ( newform.validate() ) {
+                    newform.submit();
+                    hide();
+                  }
                 }
               } );
               IButton cancel = new IButton( "取消" );
@@ -221,7 +234,7 @@ public class ProductPage extends Tab {
       } );
       return add;
     }
-    
+
     @Override
     public IButton getModifyButton() {
       IButton add = new IButton( "修改产品" );
@@ -229,38 +242,17 @@ public class ProductPage extends Tab {
 
         @Override
         public void onClick( ClickEvent event ) {
-          
-          if( list.getSelectedRecord() == null){
+          if ( list.getSelectedRecord() == null ) {
             SC.say( "请选择一条修改的产品" );
             return;
           }
-          
-          final DefaultForm form = new DefaultForm() {
-
-            @Override
-            public DataSource getDS() {
-              return ProductList.this.getDS();
-            }
-
-            @Override
-            public void afterGetModifyForm( List<FormItem> items ) {
-              for(FormItem item : items){
-                if(item.getName().equalsIgnoreCase( "cid" )){
-                  LinkedHashMap<Integer, String> valueMap = new LinkedHashMap<Integer, String>();
-                  for(Category ca : allCategories){
-                    valueMap.put( ca.getId(), ca.getName());
-                  }
-                  item.setValueMap( valueMap );
-                }
-              }
-            }
-            
-          };
           DefaultDialog dialog = new DefaultDialog( "修改产品" ) {
+
             @Override
             public Canvas getView() {
               final DynamicForm newform = form.getModifyForm();
               VLayout v = new VLayout();
+              v.setWidth( 500 );
               v.addMember( newform );
               newform.editSelectedData( list );
               IButton submit = new IButton( "保存" );
@@ -268,8 +260,10 @@ public class ProductPage extends Tab {
 
                 @Override
                 public void onClick( ClickEvent event ) {
-                  newform.submit();
-                  hide();
+                  if ( newform.validate() ) {
+                    newform.submit();
+                    hide();
+                  }
                 }
               } );
               IButton cancel = new IButton( "取消" );
@@ -294,12 +288,6 @@ public class ProductPage extends Tab {
         }
       } );
       return add;
-    }
-
-
-    @Override
-    public IButton getRemoveButton() {
-      return super.getRemoveButton();
     }
 
   }
