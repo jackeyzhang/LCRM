@@ -36,6 +36,9 @@ public class FormItemFactory {
   }
 
   public static FormItem getWidget( DataSourceField mfield, FormType type ) {
+    if ( mfield.getAttribute( DefaultField.STYPE ) == null ) {
+      return new DefaultTextItem( mfield.getName(), mfield.getTitle() );
+    }
     FormItem item = null;
     if ( mfield.getAttribute( DefaultField.STYPE ).equals( UIType.Integer.toString() ) ) {
       item = new DefaultIntegerItem();
@@ -67,12 +70,12 @@ public class FormItemFactory {
     }
 
     int mask = mfield.getAttributeAsInt( DefaultField.MASK );
-    
-    if( !UIMask.isEnable( mask, type ) ) {
+
+    if ( !UIMask.isEnable( mask, type ) ) {
       item.disable();
     }
-    
-    if( !UIMask.isVisiable( mask, type )){
+
+    if ( !UIMask.isVisiable( mask, type ) ) {
       item.hide();
     }
     item.setName( mfield.getName() );
