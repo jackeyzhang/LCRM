@@ -71,6 +71,6 @@ public @interface UILabel
 	 * 
 	 * @return
 	 */
-	UIMask mask() default UIMask.all;  
+	int mask() default 255;
 	
 }

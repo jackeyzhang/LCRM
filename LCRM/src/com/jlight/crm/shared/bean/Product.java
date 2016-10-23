@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.gwtent.reflection.client.Reflectable;
+import com.jlight.crm.ui.uireflect.MaskValue;
 import com.jlight.crm.ui.uireflect.UILabel;
-import com.jlight.crm.ui.uireflect.UIMask;
 import com.jlight.crm.ui.uireflect.UIType;
 
 
@@ -36,16 +36,16 @@ public class Product implements Serializable {
   @UILabel(type = UIType.Integer, title = "产品编号", isId = true)
   private Integer id;
 
-  @UILabel(index = 0, title = "产品名称", reqiured = true)
+  @UILabel(index = 0, title = "产品名称", reqiured = true, mask = MaskValue.OnlyEnableOnAdd)
   private String name;
 
-  @UILabel(index = 1, title = "产品编码", reqiured = true)
+  @UILabel(index = 1, title = "产品编码", reqiured = true, mask = MaskValue.OnlyEnableOnAdd)
   private String code;
 
-  @UILabel(index = 2, title = "产品识别码")
+  @UILabel(index = 2, title = "产品识别码", mask = MaskValue.OnlyEnableOnAdd)
   private String barCode;
 
-  @UILabel(index = 3, title = "类别", reqiured = true, type = UIType.List )
+  @UILabel(index = 3, title = "类别", reqiured = true, type = UIType.List, mask = MaskValue.OnlyEnableOnAdd)
   private Integer cid;
 
   @UILabel(index = 4, title = "数量单位")
@@ -63,16 +63,16 @@ public class Product implements Serializable {
   @UILabel(index = 8, title = "备注", type = UIType.TextArea)
   private String remark;
 
-  @UILabel(index = 9, title = "创建时间", type = UIType.DateTime, mask=UIMask.never)
+  @UILabel(index = 9, title = "创建时间", type = UIType.DateTime, mask = MaskValue.Never)
   private Date create;
 
-  @UILabel(index = 10, title = "更新时间", type = UIType.DateTime, mask=UIMask.never)
+  @UILabel(index = 10, title = "更新时间", type = UIType.DateTime, mask = MaskValue.Never)
   private Date edit;
 
-  @UILabel(index = 11, title = "创建人", mask=UIMask.never)
+  @UILabel(index = 11, title = "创建人", mask = MaskValue.Never)
   private Integer createUser;
 
-  @UILabel(index = 12, title = "更新人", mask=UIMask.never)
+  @UILabel(index = 12, title = "更新人", mask = MaskValue.Never)
   private Integer editUser;
 
   public Product() {
