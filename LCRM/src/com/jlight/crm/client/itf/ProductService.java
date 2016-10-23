@@ -37,4 +37,10 @@ public interface ProductService extends RemoteService {
   List<Product> listProduct( int startIndex, int length );
   
   List<Category> getCategoryList();
+  
+  Category changeCategoryName(Integer id, String newName );
+  
+  void addCategory( Category category ) throws IllegalArgumentException;
+  
+  Category removeCategory(Integer id) throws IllegalArgumentException;
 }

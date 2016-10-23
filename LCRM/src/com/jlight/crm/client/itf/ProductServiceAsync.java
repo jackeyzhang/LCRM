@@ -21,5 +21,11 @@ public interface ProductServiceAsync {
 
   void getCategoryList( AsyncCallback<List<Category>> callback );
 
+  void changeCategoryName( Integer id, String newName, AsyncCallback<Category> callback );
+
+  void addCategory( Category category, AsyncCallback<Void> callback );
+
+  void removeCategory( Integer id, AsyncCallback<Category> callback );
+
 
 }
